@@ -68,5 +68,31 @@ namespace AutomationPracticeSiteAssignment
                 
         }
 
+
+        [Test]
+        public void ValidateCost()
+        {
+            LoginPage lg = new LoginPage(getDriver());
+            HomePage hm = lg.getmeLoggedIN();
+            hm.getHomebtn().Click();
+            Scrollnew();
+            ScrollToanelement(getDriver(), hm.getProduct1());
+            hm.getAddTocartBtn().Click();
+            hm.getcontinueBtn().Click();
+            ScrollToanelement(getDriver(), hm.getProduct2());
+            hm.getaddtocartProduct2().Click();
+            hm.getcontinueBtn().Click();
+            hm.getShoopingcart().Click();
+          //Validating Price of the product selected
+            CartPage cp = new CartPage(getDriver());
+            double shippingprice = cp.getShiipingcost();
+            double totalpice = cp.getTotalfinalcost();
+            double pricetocustomer = cp.getFinalCostToCustomer();
+            Assert.AreEqual(shippingprice + totalpice, pricetocustomer);
+
+
+
+        }
+
     }
 }
