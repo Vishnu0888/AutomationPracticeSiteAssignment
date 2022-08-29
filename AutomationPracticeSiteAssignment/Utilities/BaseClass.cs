@@ -100,7 +100,12 @@ namespace AutomationPracticeSiteAssignment.Base
         public void Scrollnew()
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-            js.ExecuteScript("window.scrollBy(0,800)");
+            js.ExecuteScript("window.scrollBy(0,400)");
+        }
+        public static void WindowScrollnew(IWebDriver driver,IWebElement element)
+        {
+            IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+            js.ExecuteScript("arguments[0].scrollIntoView();", element);
         }
 
 
@@ -108,6 +113,22 @@ namespace AutomationPracticeSiteAssignment.Base
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(50));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(element));
+        }
+
+
+
+       public void selectValueFromDropdown(IWebDriver driver,IWebElement element,string selvalue)
+        {
+            SelectElement drop = new SelectElement(element);
+            drop.SelectByValue(selvalue);
+            
+        }
+        public string getSelectedOptionFromDropdown(IWebDriver driver, IWebElement element)
+        {
+            SelectElement drop = new SelectElement(element);
+           IWebElement selectediwebelemnet= drop.SelectedOption;
+           return selectediwebelemnet.Text;
+
         }
 
 

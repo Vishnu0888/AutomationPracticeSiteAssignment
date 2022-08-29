@@ -18,18 +18,39 @@ namespace AutomationPracticeSiteAssignment.Pages
         }
 
 
-        [FindsBy(How = How.XPath, Using = "//p[@id='add_to_cart']/button/span")]
-        private IWebElement AddtoCartprod1;
+        [FindsBy(How = How.XPath, Using = "//p[@id='add_to_cart']/button")]
+        private IWebElement AddtoCartprod1btn;
 
         [FindsBy(How = How.XPath, Using = "//span[@id='our_price_display']")]
         public IWebElement displaycost;
 
-        [FindsBy(How =How.Id,Using = "fancybox-frame1661505793592")]
+        [FindsBy(How =How.XPath,Using = "//iframe[@id='fancybox-frame1661687137562']")]
         public IWebElement frameid;
+
+        [FindsBy(How =How.XPath,Using = "//iframe[@id='fancybox-frame1661687137562']")]
+        public IWebElement outerframe;
+
+        [FindsBy(How =How.XPath,Using = "//select[@id='group_1']")]
+        private IWebElement sizedropdown;
+
+        [FindsBy(How =How.XPath,Using = "//a[@title='Proceed to checkout']")]
+        private IWebElement checkoutbtn;
+
 
         public IWebElement getAddtoCartprod1()
         {
-            return AddtoCartprod1;
+            return AddtoCartprod1btn;
+        }
+
+        public IWebElement getDropdown()
+        {
+            return sizedropdown;
+        }
+
+        public CartPage ClickOnCheckout()
+        {
+            checkoutbtn.Click();
+            return new CartPage(driver);
         }
 
 

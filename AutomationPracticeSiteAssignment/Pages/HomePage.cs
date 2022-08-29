@@ -56,6 +56,9 @@ namespace AutomationPracticeSiteAssignment.Pages
         [FindsBy(How =How.XPath,Using = "//tr[@id='product_3_13_0_739094']/td[@class='cart_unit']/span/span")]
         public IWebElement item2incart;
 
+        [FindsBy(How =How.CssSelector,Using = "a[title ='View my customer account']")]
+        private IWebElement usernametitle;
+
 
       
 
@@ -98,7 +101,6 @@ namespace AutomationPracticeSiteAssignment.Pages
             return product2;
         }
 
-
         public IWebElement getaddtocartProduct2()
         {
             return Addtocartprod2;
@@ -107,6 +109,12 @@ namespace AutomationPracticeSiteAssignment.Pages
         public IWebElement getShoopingcart()
         {
             return shoppingCart;
+        }
+
+        public AccountProfilePage getUsrnameTitleClick()
+        {
+            usernametitle.Click();
+            return new AccountProfilePage(driver);
         }
 
 

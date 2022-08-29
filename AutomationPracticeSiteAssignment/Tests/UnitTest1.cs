@@ -28,8 +28,6 @@ namespace AutomationPracticeSiteAssignment
             string totalcost = getDriver().FindElement(By.XPath("//span[@id='total_price']")).Text;
             string[] cost = totalcost.Split("$");
             string originalcost = cost[1];
-
-
             Assert.AreEqual(originalcost, "44.51");
 
 
@@ -93,6 +91,46 @@ namespace AutomationPracticeSiteAssignment
 
 
         }
+        [Test]
+        public void Test_QuickViewAddProduct()
+        {
+            LoginPage lg = new LoginPage(getDriver());
+            HomePage hm = lg.getmeLoggedIN();
+            hm.getHomebtn().Click();
+            Scrollnew();
+            ScrollToanelement(getDriver(), hm.getProduct1());
+            QuickViewPage qv=hm.getQuickviewProd1();
+            getDriver().SwitchTo().Frame(1);
+            System.Threading.Thread.Sleep(20000);
+            selectValueFromDropdown(getDriver(),qv.getDropdown(),"3");
+            string titlesize = getSelectedOptionFromDropdown(getDriver(), qv.getDropdown());
+            Console.WriteLine(titlesize);
+            qv.getAddtoCartprod1().Click();
+            CartPage cp=qv.ClickOnCheckout();
+            Scrollnew();
+            Assert.AreEqual(titlesize, cp.getSizeText().Trim());
+            
+
+        }
+
+
+        [Test]
+        public void Test_ValidateOrderHistory()
+        {
+            String messagepost = "This is the test message by Vishnu";
+            LoginPage lg = new LoginPage(getDriver());
+            HomePage hm = lg.getmeLoggedIN();
+            AccountProfilePage Ap=hm.getUsrnameTitleClick();
+            OrderHistoryPage ohp=Ap.ClickOrderDeatilsTab();
+            ohp.CheckDateAndSelectItem();
+            ScrollToanelement(getDriver(), ohp.getMessageSubmitBtn());
+            ohp.getmessageArea().SendKeys(messagepost);
+            ohp.getMessageSubmitBtn().Click();
+            WaitForElementDisplay(getDriver(), ohp.getSuccessmsg());
+            Assert.AreEqual(messagepost, ohp.getPostedMsg());
+
+        }
+
 
     }
 }

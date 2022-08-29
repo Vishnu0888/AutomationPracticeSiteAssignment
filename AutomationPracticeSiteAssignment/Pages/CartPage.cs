@@ -27,6 +27,9 @@ namespace AutomationPracticeSiteAssignment.Pages
         [FindsBy(How =How.XPath,Using = "//td/span[@id='total_price']")]
         private IWebElement totalpricetoCustomerelement;
 
+        [FindsBy(How =How.XPath,Using = "//td/small/a[text()='Color : Orange, Size : L']")]
+        private IWebElement size;
+
 
         public double getTotalfinalcost()
         {
@@ -54,6 +57,21 @@ namespace AutomationPracticeSiteAssignment.Pages
             double finaltotalprice = double.Parse(newtotalprice1);
             return finaltotalprice;
         }
+
+        
+        public string getSizeText()
+        {
+            string sizeofitem=size.Text;
+            string [] sizebreak=sizeofitem.Split(",");
+            string finalsize = sizebreak[1];
+            string[] complsize=sizebreak[1].Split(":");
+            string mysize = complsize[1];
+            return mysize;
+        }
+
+        
+
+
 
 
     }
