@@ -12,27 +12,30 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
+using System.Threading;
 using WebDriverManager.DriverConfigs.Impl;
 
 
 namespace AutomationPracticeSiteAssignment.Base
 {
     public class BaseClass { 
-    private IWebDriver driver;
-    String browsername = ConfigurationManager.AppSettings["Browser"];
-    String urlname = ConfigurationManager.AppSettings["URL"];
+        private IWebDriver driver;
+        String browsername;
+        String urlname;
+        public ExtentReports extent;
+        public ExtentTest test;
 
-    ExtentReports extent;
-    ExtentTest test;
+        //ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>();
 
         public IWebDriver getDriver()
-    {
-        return driver;
-    }
+        {
+            return driver;
+        }
 
         [OneTimeSetUp]
-    public void initialize()
+        public void initialize()
         {
+          
             extent = new ExtentReports();
             string path = @"C:\Users\vishn\source\repos\AutomationPracticeSiteAssignment\AutomationPracticeSiteAssignment\index.html";
             ExtentHtmlReporter html = new ExtentHtmlReporter(path);
@@ -42,17 +45,31 @@ namespace AutomationPracticeSiteAssignment.Base
             extent.AddSystemInfo("Tester", "Vishnu");
         }
 
-    [SetUp]
-    public void setup()
-    {
-         test = extent.CreateTest(TestContext.CurrentContext.Test.Name);
-         getBroswer(browsername);
-        getDriver().Url = urlname;
-        getDriver().Manage().Window.Maximize();
-        getDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
-        
+        [SetUp]
+        public void setup()
+        {
+            browsername = TestContext.Parameters["browsername"];
+            if (browsername == null)
+            {
+                browsername = ConfigurationManager.AppSettings["Browser"];
+            }
 
-    }
+            urlname = ConfigurationManager.AppSettings["URL"];
+           
+            getBroswer(browsername);
+            getDriver().Url = urlname;
+            getDriver().Manage().Window.Maximize();
+            getDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
+            test = extent.CreateTest(TestContext.CurrentContext.Test.Name);
+        }
+
+       [TearDown]
+        public void Teardown()
+        {
+            driver.Close();
+        }
+
+       
         [OneTimeTearDown]
         public void Terminate()
         {
@@ -61,13 +78,21 @@ namespace AutomationPracticeSiteAssignment.Base
             if (status == TestStatus.Failed)
             {
                 test.Fail("Method with name " + TestContext.CurrentContext.Test.Name + " is failed");
+                //DateTime time = DateTime.Now;
+                //string format = "Screenshot_" + time.ToString("h:mm:ss") + ".png";
+
+                string scrpath = "test.png";
+                getScreenshot(getDriver(), scrpath);
             }
             else
             {
                 test.Pass("Test is Passed");
+
             }
             extent.Flush();
-            driver.Close();
+            driver.Quit();
+            
+            
         }
 
         public IWebDriver getBroswer(string selectbrowser)
@@ -128,6 +153,15 @@ namespace AutomationPracticeSiteAssignment.Base
             SelectElement drop = new SelectElement(element);
            IWebElement selectediwebelemnet= drop.SelectedOption;
            return selectediwebelemnet.Text;
+
+        }
+
+
+        public MediaEntityModelProvider getScreenshot(IWebDriver driver,String path)
+        {
+            ITakesScreenshot sc = (ITakesScreenshot)driver;
+            var scshot= sc.GetScreenshot().AsBase64EncodedString;
+            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(scshot, path).Build();
 
         }
 
